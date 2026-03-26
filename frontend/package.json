@@ -1,0 +1,17 @@
+{
+  "name": "summarizer-ai-frontend",
+  "version": "1.0.0",
+  "description": "Summarizer.ai Frontend with Local Tailwind Build",
+  "main": "index.html",
+  "scripts": {
+    "build": "npx tailwindcss -i ./input.css -o ./dist/output.css",
+    "watch": "npx tailwindcss -i ./input.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/container-queries": "^0.1.1"
+  }
+}

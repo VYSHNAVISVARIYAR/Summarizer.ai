@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .glass-card {
+        background: rgba(25, 37, 64, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+    .text-gradient {
+        background: linear-gradient(to right, #ff716c, #81ecff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .btn-gradient {
+        background: linear-gradient(135deg, #ff716c 0%, #81ecff 100%);
+    }
+    .light-leak {
+        background: radial-gradient(circle at 50% 50%, rgba(129, 236, 255, 0.08), transparent 70%);
+    }
+}
+
+/* Toast System */
+#toast {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 100;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    background: rgba(25, 37, 64, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(129, 236, 255, 0.2);
+    color: white;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    transform: translateX(120%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+#toast.success { border-color: rgba(34, 197, 94, 0.5); }
+#toast.error { border-color: rgba(239, 68, 68, 0.5); }
+
+body { min-height: 100dvh; }

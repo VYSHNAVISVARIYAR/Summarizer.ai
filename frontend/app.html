@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summarizer.ai | AI research paper summarizer and Insight extractor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="javascript:showTab('analyze')" class="brand">
+                <div class="brand-icon">🧬</div>
+                Summarizer<span>.ai</span>
+            </a>
+            <div class="nav-links">
+                <a href="javascript:showTab('analyze')" class="nav-link active" id="nav-analyze">Analyze</a>
+                <a href="javascript:showTab('compare')" class="nav-link" id="nav-compare">Compare</a>
+                <a href="javascript:showTab('history')" class="nav-link" id="nav-history">History</a>
+            </div>
+            <div class="user-area">
+                <a href="https://github.com/VYSHNAVISVARIYAR/Summarizer.ai.git" target="_blank" class="github-link" title="Source Code">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                </a>
+                <span class="username" id="usernameDisplay">Researcher</span>
+                <button id="logoutBtn" class="logout-btn">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- ANALYZE TAB -->
+        <div id="tab-analyze" class="tab-content active">
+            <header class="hero">
+                <span class="hero-badge">Llama 3.3 Neural Core</span>
+                <h1 class="hero-title">Summarizer.ai</h1>
+                <p class="hero-sub">AI research paper summarizer and Insight extractor</p>
+            </header>
+
+            <div class="card upload-card">
+                <div class="drop-zone" id="dropZone">
+                    <span class="drop-icon">🌊</span>
+                    <p class="drop-text" id="dropText">Drag & Drop PDF or DOCX</p>
+                    <p class="drop-or">Securely analyzed in the cloud</p>
+                    <input type="file" id="fileInput" hidden accept=".pdf,.docx">
+                </div>
+
+                <div class="text-area-wrap">
+                    <textarea id="textInput" placeholder="...or paste research text here for instant neural processing"></textarea>
+                    <div class="char-count"><span id="charCount">0</span> characters</div>
+                </div>
+
+                <!-- Progress Section -->
+                <div id="progressWrap" class="progress-wrap" style="display:none">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="progress-steps">
+                        <div class="p-step" id="ps1">Syncing</div>
+                        <div class="p-step" id="ps2">Parsing</div>
+                        <div class="p-step" id="ps3">Neural Mapping</div>
+                        <div class="p-step" id="ps4">Summarizing</div>
+                        <div class="p-step" id="ps5">Insights</div>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button id="analyzeBtn" class="analyze-btn">Start Neural Analysis</button>
+                    <button id="clearBtn" class="logout-btn" style="display:none">Clear</button>
+                </div>
+            </div>
+
+            <!-- RESULTS SECTION -->
+            <section id="results" class="results" style="display:none">
+                <div class="results-header">
+                    <h2 class="section-title">Analysis Results</h2>
+                    <div class="result-actions">
+                        <button id="downloadPdfBtn" class="action-btn primary">Export PDF</button>
+                        <button id="downloadTxtBtn" class="action-btn">TXT</button>
+                        <button id="copyBtn" class="action-btn">Copy</button>
+                        <button id="emailBtn" class="action-btn">Email</button>
+                        <button id="newBtn" class="action-btn">Reset</button>
+                    </div>
+                </div>
+
+                <div id="abstractWarning" class="alert-box warning" style="display:none; padding:1rem; background:rgba(245, 158, 11, 0.1); border:1px solid rgba(245, 158, 11, 0.2); border-radius:12px; margin-bottom: 2rem; color:#f59e0b; font-weight:600">
+                    ⚠️ Abstract-only content detected. Provide the full paper for deeper analysis.
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card card">
+                        <h3>📋 Executive Summary</h3>
+                        <div id="summaryText" class="summary-content">Processing...</div>
+                        
+                        <div class="chat-container">
+                            <h3>💬 Research Oracle</h3>
+                            <div id="qaMessages" class="chat-messages">
+                                <!-- AI Chat Messages -->
+                            </div>
+                            <div id="chatMessages" style="display:none"></div>
+                            <div class="action-row">
+                                <input type="text" id="qaInput" placeholder="Ask specific questions about this paper..." style="flex:1">
+                                <button id="qaSendBtn" class="analyze-btn" style="padding:0.8rem 1.5rem; width:auto">Ask AI</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="side-panel">
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <h3>💡 Key Insights</h3>
+                            <ul id="insightsList" class="insights-list">
+                                <!-- Insights will appear here -->
+                            </ul>
+                        </div>
+
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <h3>📊 Neural Stats</h3>
+                            <div class="stats-group">
+                                <div class="stat-item"><span class="stat-label">Word Count</span><span class="stat-value" id="wordCount">0</span></div>
+                                <div class="stat-item"><span class="stat-label">Processing Time</span><span class="stat-value" id="procTime">0s</span></div>
+                                <div class="stat-item"><span class="stat-label">Insights Found</span><span class="stat-value" id="insightCount">0</span></div>
+                                <div class="stat-item"><span class="stat-label">Times Accessed</span><span class="stat-value" id="openCount">1</span></div>
+                                <div class="stat-item"><span class="stat-label">Reading Time</span><span class="stat-value" id="readingTime">0m 0s</span></div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3>📝 Researcher Notes</h3>
+                            <textarea id="noteInput" placeholder="Save your findings here..." style="min-height:150px; font-size:0.9rem"></textarea>
+                            <button id="saveNoteBtn" class="analyze-btn" style="margin-top:1rem; font-size:0.9rem; padding:0.8rem">Save Changes</button>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:2rem">
+                            <button id="timelineBtn" class="action-btn" style="justify-content:center">🕒 Timeline</button>
+                            <button id="networkBtn" class="action-btn" style="justify-content:center">🔗 Network</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- COMPARE TAB -->
+        <div id="tab-compare" class="tab-content">
+            <header class="hero">
+                <h1 class="hero-title">Comparative Analysis</h1>
+                <p class="hero-sub">Directly contrast two research papers to identify unique contributions and shared themes.</p>
+            </header>
+
+            <div class="compare-grid">
+                <div class="card compare-card">
+                    <h4>Paper A</h4>
+                    <div class="drop-zone" style="padding:1.5rem" onclick="document.getElementById('comparePdf1').click()">
+                        <span id="compareDropText1">Upload PDF</span>
+                        <input type="file" id="comparePdf1" hidden accept=".pdf">
+                    </div>
+                </div>
+                <div class="card compare-card">
+                    <h4>Paper B</h4>
+                    <div class="drop-zone" style="padding:1.5rem" onclick="document.getElementById('comparePdf2').click()">
+                        <span id="compareDropText2">Upload PDF</span>
+                        <input type="file" id="comparePdf2" hidden accept=".pdf">
+                    </div>
+                </div>
+            </div>
+
+            <button id="compareBtn" class="analyze-btn" style="max-width:400px; margin: 3rem auto 0; display:block">⚖️ Compare Papers</button>
+
+            <div id="compareResult" class="card" style="display:none; margin-top:3rem">
+                <!-- Result will appear here -->
+            </div>
+            
+            <div id="compareDownloadRow" style="display:none; justify-content:center; gap:1rem; margin-top:2rem">
+                <button id="compareDownloadPdf" class="action-btn primary">Export Comparison PDF</button>
+                <button id="compareDownloadTxt" class="action-btn">Download TXT</button>
+            </div>
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="tab-history" class="tab-content">
+            <header class="hero">
+                <h1 class="hero-title">Research Archive</h1>
+                <p class="hero-sub">Access your previous neural analyses and generated reports.</p>
+            </header>
+            <div class="history-grid" id="historyList">
+                <!-- History Cards -->
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING ELEMENTS -->
+    <div id="chatToggle" class="toast" style="display:none; bottom:2rem; right:2rem; left:auto; transform:none; cursor:pointer">💬 Ask Research Assistant</div>
+    
+    <div id="chatWidget" class="modal" style="background:transparent; backdrop-filter:none">
+        <div class="modal-content" style="max-width:400px; padding:2rem; position:fixed; bottom:6rem; right:2rem">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem">
+                <h3 style="margin:0">Research AI</h3>
+                <button id="closeChatWidget" class="logout-btn" style="padding:0.2rem 0.5rem">×</button>
+            </div>
+            <div id="chatWidgetMessages" class="chat-messages" style="height:350px; margin-bottom:1rem"></div>
+            <div style="display:flex; gap:0.5rem">
+                <input type="text" id="chatWidgetInput" placeholder="Probe deeper...">
+                <button id="chatWidgetSend" class="analyze-btn" style="padding:0.75rem; width:50px">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3>📧 Dispatch Report</h3>
+            <p style="margin: 1.5rem 0; color:var(--text-secondary)">Send the complete analysis summary to your registered email.</p>
+            <input type="email" id="emailInput" placeholder="colleague@research.lab">
+            <button id="sendEmailBtn" class="analyze-btn" style="margin-top:2rem">Send Email</button>
+        </div>
+    </div>
+
+    <div id="timelineModal" class="modal">
+        <div class="modal-content" style="max-width:850px">
+            <span class="close-btn" onclick="closeTimelineModal()">×</span>
+            <h3>🕒 Analysis Timeline</h3>
+            <div id="timelineContainer" style="margin-top:2rem; max-height:60vh; overflow-y:auto"></div>
+        </div>
+    </div>
+
+    <div id="networkModal" class="modal">
+        <div class="modal-content" style="max-width:850px">
+            <span class="close-btn" onclick="closeNetworkModal()">×</span>
+            <h3>🔗 Neural Citation Network</h3>
+            <div id="networkContainer" style="margin-top:2rem; min-height:400px; display:flex; align-items:center; justify-content:center; color:var(--text-muted)">
+                <p>Citation network visualization coming soon.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="explorerModal" class="modal">
+        <div class="modal-content" style="max-width:850px">
+            <span class="close-btn" onclick="closeExplorerModal()">×</span>
+            <h3>🗺️ Research Landscape</h3>
+            <div id="explorerContainer" style="margin-top:2rem; min-height:400px; display:flex; align-items:center; justify-content:center; color:var(--text-muted)">
+                <p>Topic landscape visualization coming soon.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
